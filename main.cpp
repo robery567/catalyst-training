@@ -1,4 +1,5 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <cmath>
 
 #define PI 3.14159265
 
@@ -12,11 +13,20 @@ double roundTwoDecimals(double number) {
    return round(number*100)/100;
 }
 
-pair<double, pair<double, double>> calculateNewDirection(double wheelBase, double distance, double steeringAngle) {
-    double turnRadius = abs(calculateTurnRadius(wheelBase, steeringAngle));
+pair<double, pair<double, double> > calculateNewDirection(double wheelBase, double distance, double steeringAngle) {
+    // If our steering angle is 0 then it's clear we do no rotation
+    if (steeringAngle == 0) {
+        return make_pair(0.00, make_pair(0.00, distance));
+    }
+
+    double turnRadius = calculateTurnRadius(wheelBase, steeringAngle);
     double length = (2*PI) * turnRadius;
 
     double computedNewDirection = distance*360 / length;
+
+    while (computedNewDirection > 360) {
+        computedNewDirection -= 360;
+    }
 
     // we round it to 2 decimals
     computedNewDirection = roundTwoDecimals(computedNewDirection);
@@ -40,6 +50,7 @@ pair<double, pair<double, double>> calculateNewDirection(double wheelBase, doubl
     // We round the coordinates to 2 decimals
     xCoordinate = roundTwoDecimals(xCoordinate);
     yCoordinate = roundTwoDecimals(yCoordinate);
+
 
     return make_pair(computedNewDirection, make_pair(xCoordinate, yCoordinate));
 }
